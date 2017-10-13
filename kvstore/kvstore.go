@@ -2,38 +2,39 @@ package kvstore
 
 import (
 	"fmt"
+	"time"
 
-	"github.com/thoas/gokvstores"
-	"github.com/thoas/picfit/config"
+	"github.com/admpub/gokvstores"
+	"github.com/admpub/picfit/config"
 )
 
 // NewKVStoreFromConfig returns a KVStore from config
 func NewKVStoreFromConfig(cfg *config.Config) (gokvstores.KVStore, error) {
 	if cfg.KVStore == nil {
-		return &DummyKVStore{}, nil
+		return &gokvstores.DummyStore{}, nil
 	}
 
 	section := cfg.KVStore
 
 	switch section.Type {
 	case "dummy":
-		return &DummyKVStore{}, nil
+		return &gokvstores.DummyStore{}, nil
+
 	case "redis":
-		host := section.Host
+		return gokvstores.NewRedisClientStore(&gokvstores.RedisClientOptions{
+			Addr:     fmt.Sprintf("%s:%d", section.Host, section.Port),
+			Password: section.Password,
+			DB:       section.Db,
+		}, time.Second*30)
 
-		password := section.Password
-
-		db := section.Db
-
-		port := section.Port
-
-		return gokvstores.NewRedisKVStore(host, port, password, db), nil
 	case "cache":
-		if section.MaxEntries == 0 {
-			section.MaxEntries = -1
+		if section.Expiration == 0 {
+			section.Expiration = 86400 * 365
 		}
-
-		return gokvstores.NewCacheKVStore(section.MaxEntries), nil
+		if section.CleanupInterval == 0 {
+			section.CleanupInterval = 86400 * 365
+		}
+		return gokvstores.NewMemoryStore(section.Expiration, section.CleanupInterval)
 
 	}
 

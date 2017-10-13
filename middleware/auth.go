@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/thoas/picfit/config"
-	"github.com/thoas/picfit/signature"
+	"github.com/admpub/picfit/config"
+	"github.com/admpub/picfit/signature"
 )
 
 // Security wraps the request and confront sent parameters with secret key

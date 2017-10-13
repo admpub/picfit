@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"regexp"
 
-	"github.com/thoas/picfit/util"
+	"github.com/admpub/picfit/util"
 )
 
 var signRegex = regexp.MustCompile("&?sig=[^&]*")

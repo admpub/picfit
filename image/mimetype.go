@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/rubenfonseca/fastimage"
-	"github.com/thoas/picfit/config"
+	"github.com/admpub/picfit/config"
 )
 
 const MimetypeDetectorTypeFastimage = "fastimage"

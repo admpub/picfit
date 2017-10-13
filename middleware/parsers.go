@@ -7,11 +7,11 @@ import (
 	"regexp"
 
 	"github.com/gin-gonic/gin"
-	"github.com/thoas/picfit/engine"
-	"github.com/thoas/picfit/hash"
-	"github.com/thoas/picfit/image"
-	"github.com/thoas/picfit/middleware/context"
-	"github.com/thoas/picfit/util"
+	"github.com/admpub/picfit/engine"
+	"github.com/admpub/picfit/hash"
+	"github.com/admpub/picfit/image"
+	"github.com/admpub/picfit/middleware/context"
+	"github.com/admpub/picfit/util"
 )
 
 const sigParamName = "sig"

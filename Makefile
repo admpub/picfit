@@ -10,7 +10,7 @@ BIN_DIR = $(ROOT_DIR)/bin
 CONFIG=`pwd`/config.json
 BIN = $(BIN_DIR)/picfit
 SSL_DIR = $(ROOT_DIR)/ssl
-APP_DIR = /go/src/github.com/thoas/picfit
+APP_DIR = /go/src/github.com/admpub/picfit
 
 test: unit
 
@@ -43,10 +43,10 @@ build-static:
 	@(echo "-> Creating statically linked binary...")
 	mkdir -p $(BIN_DIR)
 	CGO_ENABLED=0 go build -ldflags "\
-		    -X github.com/thoas/picfit/constants.Branch=$(branch) \
-		    -X github.com/thoas/picfit/constants.Revision=$(commit) \
-		    -X 'github.com/thoas/picfit/constants.BuildTime=$(now)' \
-		    -X 'github.com/thoas/picfit/constants.Compiler=$(compiler)'" -a -installsuffix cgo -o $(BIN_DIR)/picfit
+		    -X github.com/admpub/picfit/constants.Branch=$(branch) \
+		    -X github.com/admpub/picfit/constants.Revision=$(commit) \
+		    -X 'github.com/admpub/picfit/constants.BuildTime=$(now)' \
+		    -X 'github.com/admpub/picfit/constants.Compiler=$(compiler)'" -a -installsuffix cgo -o $(BIN_DIR)/picfit
 
 docker-build-static: build-static
 	cp -r /etc/ssl/* $(APP_DIR)/ssl/

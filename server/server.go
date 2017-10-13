@@ -11,12 +11,12 @@ import (
 	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/contrib/sentry"
 	"github.com/gin-gonic/gin"
-	"github.com/thoas/picfit/application"
-	"github.com/thoas/picfit/config"
-	"github.com/thoas/picfit/middleware"
-	"github.com/thoas/picfit/middleware/context"
-	"github.com/thoas/picfit/views"
-	"github.com/thoas/stats"
+	"github.com/admpub/picfit/application"
+	"github.com/admpub/picfit/config"
+	"github.com/admpub/picfit/middleware"
+	"github.com/admpub/picfit/middleware/context"
+	"github.com/admpub/picfit/views"
+	"github.com/admpub/stats"
 )
 
 // Load loads the application and launch the webserver

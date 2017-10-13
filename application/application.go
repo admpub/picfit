@@ -8,16 +8,16 @@ import (
 	"context"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/admpub/gokvstores"
+	"github.com/admpub/picfit/config"
+	"github.com/admpub/picfit/engine"
+	"github.com/admpub/picfit/errs"
+	"github.com/admpub/picfit/hash"
+	"github.com/admpub/picfit/image"
+	"github.com/admpub/picfit/kvstore"
+	"github.com/admpub/picfit/logger"
+	"github.com/admpub/picfit/storage"
 	"github.com/gin-gonic/gin"
-	"github.com/thoas/gokvstores"
-	"github.com/thoas/picfit/config"
-	"github.com/thoas/picfit/engine"
-	"github.com/thoas/picfit/errs"
-	"github.com/thoas/picfit/hash"
-	"github.com/thoas/picfit/image"
-	"github.com/thoas/picfit/kvstore"
-	"github.com/thoas/picfit/logger"
-	"github.com/thoas/picfit/storage"
 )
 
 // LoadFromConfigContent returns a net/context from content
@@ -88,9 +88,10 @@ func Store(ctx context.Context, filepath string, i *image.ImageFile) error {
 
 	cfg := config.FromContext(ctx)
 
-	k := kvstore.FromContext(ctx)
-	con := k.Connection()
-	defer con.Close()
+	//k := kvstore.FromContext(ctx)
+	//con := k.Connection()
+	//defer con.Close()
+	con := kvstore.FromContext(ctx)
 
 	err := i.Save()
 
@@ -131,7 +132,7 @@ func Store(ctx context.Context, filepath string, i *image.ImageFile) error {
 
 		parentKey = fmt.Sprintf("%s:children", parentKey)
 
-		err = con.SetAdd(parentKey, storeKey)
+		err = con.AppendSlice(parentKey, storeKey)
 
 		if err != nil {
 			l.Fatal(err)
@@ -146,9 +147,10 @@ func Store(ctx context.Context, filepath string, i *image.ImageFile) error {
 
 // Delete removes a file from kvstore and storage
 func Delete(ctx context.Context, filepath string) error {
-	k := kvstore.FromContext(ctx)
-	con := k.Connection()
-	defer con.Close()
+	//k := kvstore.FromContext(ctx)
+	//con := k.Connection()
+	//defer con.Close()
+	con := kvstore.FromContext(ctx)
 
 	l := logger.FromContext(ctx)
 
@@ -178,14 +180,14 @@ func Delete(ctx context.Context, filepath string) error {
 
 	childrenKey := fmt.Sprintf("%s:children", parentKey)
 
-	if !con.Exists(childrenKey) {
+	if ok, _ := con.Exists(childrenKey); !ok {
 		l.Infof("Children key %s does not exist for parent %s", childrenKey, parentKey)
 
 		return errs.ErrKeyNotExists
 	}
 
 	// Get the list of items to cleanup.
-	children := con.SetMembers(childrenKey)
+	children, _ := con.GetMap(childrenKey)
 
 	if children == nil {
 		l.Infof("No children to delete for %s", parentKey)
@@ -195,16 +197,14 @@ func Delete(ctx context.Context, filepath string) error {
 
 	store := storage.DestinationFromContext(ctx)
 
-	for _, s := range children {
-		key, err := gokvstores.String(s)
-
+	for key := range children {
+		// Now, every child is a hash which points to a key/value pair in
+		// KVStore which in turn points to a file in dst storage.
+		v, err := con.Get(key)
 		if err != nil {
 			return err
 		}
-
-		// Now, every child is a hash which points to a key/value pair in
-		// KVStore which in turn points to a file in dst storage.
-		dstfile, err := gokvstores.String(con.Get(key))
+		dstfile, _ := v.(string)
 
 		if err != nil {
 			return err
@@ -242,14 +242,14 @@ func Delete(ctx context.Context, filepath string) error {
 func ImageFileFromContext(c *gin.Context, async bool, load bool) (*image.ImageFile, error) {
 	key := c.MustGet("key").(string)
 
-	k := kvstore.FromContext(c)
-	con := k.Connection()
+	//k := kvstore.FromContext(c)
+	//con := k.Connection()
+	//defer con.Close()
+	con := kvstore.FromContext(c)
 
 	cfg := config.FromContext(c)
 
 	l := logger.FromContext(c)
-
-	defer con.Close()
 
 	destStorage := storage.DestinationFromContext(c)
 
@@ -270,7 +270,11 @@ func ImageFileFromContext(c *gin.Context, async bool, load bool) (*image.ImageFi
 	}
 
 	// Image from the KVStore found
-	stored, err := gokvstores.String(con.Get(storeKey))
+	v, err := con.Get(storeKey)
+	if err != nil {
+		return nil, err
+	}
+	stored, _ := v.(string)
 
 	file.Filepath = stored
 

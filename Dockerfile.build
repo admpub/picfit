@@ -1,7 +1,7 @@
 FROM golang:1.9
 
-ADD . /go/src/github.com/thoas/picfit
+ADD . /go/src/github.com/admpub/picfit
 
-WORKDIR /go/src/github.com/thoas/picfit
+WORKDIR /go/src/github.com/admpub/picfit
 
 CMD make docker-build-static

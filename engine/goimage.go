@@ -15,7 +15,7 @@ import (
 
 	"github.com/disintegration/imaging"
 	"github.com/imdario/mergo"
-	imagefile "github.com/thoas/picfit/image"
+	imagefile "github.com/admpub/picfit/image"
 	"golang.org/x/image/bmp"
 	"golang.org/x/image/tiff"
 )

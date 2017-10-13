@@ -2,9 +2,10 @@ package config
 
 import (
 	"bytes"
+	"time"
 
+	"github.com/admpub/picfit/constants"
 	"github.com/spf13/viper"
-	"github.com/thoas/picfit/constants"
 )
 
 // Shard is a struct to allow shard location when files are uploaded
@@ -35,13 +36,14 @@ type Options struct {
 
 // KVStore is a struct to represent a key/value store (redis, cache)
 type KVStore struct {
-	Type       string
-	Host       string
-	Port       int
-	Password   string
-	Db         int
-	Prefix     string
-	MaxEntries int
+	Type            string
+	Host            string
+	Port            int
+	Password        string
+	Db              int
+	Prefix          string
+	Expiration      time.Duration
+	CleanupInterval time.Duration
 }
 
 // Storage is a struct to represent a Storage (fs, s3)

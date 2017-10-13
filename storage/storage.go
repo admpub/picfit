@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/mitchellh/goamz/aws"
-	"github.com/thoas/gostorages"
-	"github.com/thoas/picfit/config"
+	"github.com/admpub/gostorages"
+	"github.com/admpub/picfit/config"
 )
 
 // NewStoragesFromConfig return destination and source storages from config

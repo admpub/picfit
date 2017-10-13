@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/franela/goreq"
-	"github.com/thoas/gostorages"
-	"github.com/thoas/picfit/errs"
+	"github.com/admpub/gostorages"
+	"github.com/admpub/picfit/errs"
 )
 
 // HTTPStorage wraps a storage

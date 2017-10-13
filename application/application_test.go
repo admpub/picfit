@@ -20,15 +20,15 @@ import (
 
 	"golang.org/x/net/context"
 
+	"github.com/admpub/gokvstores"
+	"github.com/admpub/picfit/application"
+	"github.com/admpub/picfit/config"
+	"github.com/admpub/picfit/kvstore"
+	"github.com/admpub/picfit/server"
+	"github.com/admpub/picfit/signature"
+	"github.com/admpub/picfit/storage"
 	"github.com/disintegration/imaging"
 	"github.com/stretchr/testify/assert"
-	"github.com/thoas/gokvstores"
-	"github.com/thoas/picfit/application"
-	"github.com/thoas/picfit/config"
-	"github.com/thoas/picfit/kvstore"
-	"github.com/thoas/picfit/server"
-	"github.com/thoas/picfit/signature"
-	"github.com/thoas/picfit/storage"
 )
 
 type Dimension struct {

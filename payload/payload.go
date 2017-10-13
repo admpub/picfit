@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/mholt/binding"
-	"github.com/thoas/gostorages"
-	"github.com/thoas/picfit/image"
+	"github.com/admpub/gostorages"
+	"github.com/admpub/picfit/image"
 )
 
 // MultipartPayload represents a multipart upload

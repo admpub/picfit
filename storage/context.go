@@ -3,7 +3,7 @@ package storage
 import (
 	"context"
 
-	"github.com/thoas/gostorages"
+	"github.com/admpub/gostorages"
 )
 
 const sourceKey = "srcStorage"

@@ -1,0 +1,19 @@
+{
+    "port": 3001,
+    "kvstore": {
+        "type": "cache"
+    },
+    "storage": {
+        "src": {
+          "type": "fs",
+          "location": "./data/upload"
+        },
+        "dst": {
+          "type": "fs",
+          "location": "./data/thumb"
+        }
+    },
+    "options": {
+        "enable_delete": true
+    }
+}

@@ -27,7 +27,7 @@ func NewKVStoreFromConfig(cfg *config.Config) (gokvstores.KVStore, error) {
 			DB:       section.Db,
 		}, time.Second*30)
 
-	case "cache":
+	case "cache", "memory":
 		if section.Expiration == 0 {
 			section.Expiration = 86400 * 365
 		}

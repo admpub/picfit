@@ -7,21 +7,21 @@ import (
 
 	netContext "context"
 
-	"github.com/getsentry/raven-go"
-	"github.com/gin-gonic/contrib/cors"
-	"github.com/gin-gonic/contrib/sentry"
-	"github.com/gin-gonic/gin"
 	"github.com/admpub/picfit/application"
 	"github.com/admpub/picfit/config"
 	"github.com/admpub/picfit/middleware"
 	"github.com/admpub/picfit/middleware/context"
 	"github.com/admpub/picfit/views"
 	"github.com/admpub/stats"
+	"github.com/getsentry/raven-go"
+	"github.com/gin-gonic/contrib/cors"
+	"github.com/gin-gonic/contrib/sentry"
+	"github.com/gin-gonic/gin"
 )
 
 // Load loads the application and launch the webserver
-func Load(path string) error {
-	ctx, err := application.Load(path)
+func Load(path string, port int) error {
+	ctx, err := application.Load(path, port)
 
 	if err != nil {
 		return err

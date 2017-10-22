@@ -23,6 +23,11 @@ func main() {
 			Usage:  "Config file path",
 			EnvVar: "PICFIT_CONFIG_PATH",
 		},
+		cli.IntFlag{
+			Name:   "port, p",
+			Usage:  "Server port",
+			EnvVar: "PICFIT_PORT",
+		},
 	}
 
 	app.Commands = []cli.Command{
@@ -86,7 +91,9 @@ func main() {
 			os.Exit(1)
 		}
 
-		err := server.Load(config)
+		port := c.Int("port")
+
+		err := server.Load(config, port)
 
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)

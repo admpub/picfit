@@ -8,7 +8,6 @@ import (
 	"context"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/admpub/gokvstores"
 	"github.com/admpub/picfit/config"
 	"github.com/admpub/picfit/engine"
 	"github.com/admpub/picfit/errs"
@@ -72,13 +71,16 @@ func LoadFromConfig(cfg *config.Config) (context.Context, error) {
 }
 
 // Load creates a net/context from a file config path
-func Load(path string) (context.Context, error) {
+func Load(path string, port int) (context.Context, error) {
 	cfg, err := config.Load(path)
 
 	if err != nil {
 		return nil, err
 	}
-
+	if port > 0 {
+		cfg.Port = port
+	}
+	cfg.Options.EnableDelete = true
 	return LoadFromConfig(cfg)
 }
 
@@ -88,9 +90,6 @@ func Store(ctx context.Context, filepath string, i *image.ImageFile) error {
 
 	cfg := config.FromContext(ctx)
 
-	//k := kvstore.FromContext(ctx)
-	//con := k.Connection()
-	//defer con.Close()
 	con := kvstore.FromContext(ctx)
 
 	err := i.Save()
@@ -131,7 +130,6 @@ func Store(ctx context.Context, filepath string, i *image.ImageFile) error {
 		}
 
 		parentKey = fmt.Sprintf("%s:children", parentKey)
-
 		err = con.AppendSlice(parentKey, storeKey)
 
 		if err != nil {
@@ -147,9 +145,7 @@ func Store(ctx context.Context, filepath string, i *image.ImageFile) error {
 
 // Delete removes a file from kvstore and storage
 func Delete(ctx context.Context, filepath string) error {
-	//k := kvstore.FromContext(ctx)
-	//con := k.Connection()
-	//defer con.Close()
+
 	con := kvstore.FromContext(ctx)
 
 	l := logger.FromContext(ctx)
@@ -187,7 +183,7 @@ func Delete(ctx context.Context, filepath string) error {
 	}
 
 	// Get the list of items to cleanup.
-	children, _ := con.GetMap(childrenKey)
+	children, _ := con.GetSlice(childrenKey)
 
 	if children == nil {
 		l.Infof("No children to delete for %s", parentKey)
@@ -197,7 +193,8 @@ func Delete(ctx context.Context, filepath string) error {
 
 	store := storage.DestinationFromContext(ctx)
 
-	for key := range children {
+	for _, _key := range children {
+		key, _ := _key.(string)
 		// Now, every child is a hash which points to a key/value pair in
 		// KVStore which in turn points to a file in dst storage.
 		v, err := con.Get(key)
@@ -242,9 +239,6 @@ func Delete(ctx context.Context, filepath string) error {
 func ImageFileFromContext(c *gin.Context, async bool, load bool) (*image.ImageFile, error) {
 	key := c.MustGet("key").(string)
 
-	//k := kvstore.FromContext(c)
-	//con := k.Connection()
-	//defer con.Close()
 	con := kvstore.FromContext(c)
 
 	cfg := config.FromContext(c)

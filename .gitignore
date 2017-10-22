@@ -26,3 +26,4 @@ _testmain.go
 /*.json
 conf
 /data/thumb/*.jpg
+/.vscode

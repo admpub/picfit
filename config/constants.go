@@ -27,3 +27,6 @@ const DefaultShardDepth = 0
 
 // DefaultShardRestOnly is the default shard rest behaviour
 const DefaultShardRestOnly = true
+
+// DefaultCacheControlDuration is the time in seconds to set the cache control header
+const DefaultCacheControlDuration = 300

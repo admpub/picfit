@@ -84,6 +84,7 @@ type Config struct {
 	Storage        *Storages
 	KVStore        *KVStore
 	Logger         Logger
+	CacheControl   int
 }
 
 // Logger is a struct to configure logger
@@ -121,6 +122,7 @@ func DefaultConfig() *Config {
 			Depth:    DefaultShardDepth,
 			RestOnly: DefaultShardRestOnly,
 		},
+		CacheControl: DefaultCacheControlDuration,
 	}
 }
 
@@ -133,6 +135,7 @@ func load(content string, isPath bool) (*Config, error) {
 	viper.SetDefault("shard", defaultConfig.Shard)
 	viper.SetDefault("port", defaultConfig.Port)
 	viper.SetDefault("kvstore", defaultConfig.KVStore)
+	viper.SetDefault("cachecontrol", defaultConfig.CacheControl)
 	viper.SetEnvPrefix("picfit")
 
 	var err error

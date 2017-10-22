@@ -80,7 +80,7 @@ func Load(path string, port int) (context.Context, error) {
 	if port > 0 {
 		cfg.Port = port
 	}
-	cfg.Options.EnableDelete = true
+	//cfg.Options.EnableDelete = true
 	return LoadFromConfig(cfg)
 }
 
